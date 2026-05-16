@@ -72,10 +72,14 @@ function validateVideoFile(file) {
 
 function normalizeEvaluationResponse(data) {
   return {
-    score: data?.score ?? "8.5 / 10",
-    summary: data?.summary ?? "Good interview practice. Your answer was clear, organized, and professional. Try to reduce pauses, speak more confidently, and add one specific example to make your response stronger.",
-    strengths: Array.isArray(data?.strengths) && data.strengths.length > 0 ? data.strengths : ["Clear voice", "Professional appearance", "Good structure"],
-    improvements: Array.isArray(data?.improvements) && data.improvements.length > 0 ? data.improvements : ["Speak more confidently", "Use more examples", "Reduce filler words"],
+    score: data?.final_score ? `${data.final_score} / 10` : "N/A",
+    summary: data?.hr_recommendation ?? "No summary available.",
+    strengths: Array.isArray(data?.top_strengths) && data.top_strengths.length > 0
+      ? data.top_strengths
+      : ["No strengths data available."],
+    improvements: Array.isArray(data?.priority_areas) && data.priority_areas.length > 0
+      ? data.priority_areas
+      : ["No improvement data available."],
   };
 }
 
