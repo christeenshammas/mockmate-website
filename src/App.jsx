@@ -194,54 +194,44 @@ export default function App() {
     setError(null);
     setVideoFile(file);
   };
+const submitVideo = async () => {
+  if (!videoFile || !practiceType) {
+    setError("Please select a practice type and upload a video first.");
+    return;
+  }
+  if (practiceType === "hr" && !selectedQuestion) {
+    setError("Please generate an HR question before uploading your video.");
+    return;
+  }
+  if (videoFile.size > 4 * 1024 * 1024) {
+    setError("Video file is too large. Please upload a video under 4MB or trim it shorter.");
+    return;
+  }
+  setError(null);
+  setIsProcessing(true);
+  setIsEvaluating(true);
+  try {
+    const formData = new FormData();
+    formData.append("file", videoFile);
+    formData.append("practiceType", practiceType);
+    formData.append("practiceTypeLabel", practiceType === "hr" ? "HR Question" : "Self Introduction");
+    formData.append("question", practiceType === "hr" ? selectedQuestion : "Self-introduction");
+    formData.append("hrQuestion", practiceType === "hr" ? selectedQuestion : "");
+    await fetch(N8N_WEBHOOK_URL, { method: "POST", body: formData });
+    setEvaluationResult({ status: "processing" });
+    setStep("result");
+  } catch (err) {
+    setEvaluationResult({ status: "processing" });
+    setStep("result");
+  } finally {
+    setIsProcessing(false);
+    setIsEvaluating(false);
+  }
+};
+
 
 
   
-  const submitVideo = async () => {
-    if (!videoFile || !practiceType) {
-      setError("Please select a practice type and upload a video first.");
-      return;
-    }
-    if (practiceType === "hr" && !selectedQuestion) {
-      setError("Please generate an HR question before uploading your video.");
-      return;
-    }
-    
-  // compress
-if (videoFile.size > 4 * 1024 * 1024) {
-  setError("Video file is too large. Please upload a video under 4MB or trim it shorter.");
-  setIsProcessing(false);
-  setIsEvaluating(false);
-  return;
-}
-    setError(null);
-    setIsProcessing(true);
-    setIsEvaluating(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", videoFile);
-      formData.append("practiceType", practiceType);
-      formData.append("practiceTypeLabel", practiceType === "hr" ? "HR Question" : "Self Introduction");
-      formData.append("question", practiceType === "hr" ? selectedQuestion : "Self-introduction");
-      formData.append("hrQuestion", practiceType === "hr" ? selectedQuestion : "");
-      const response = await fetch(N8N_WEBHOOK_URL, { method: "POST", body: formData });
-      if (!response.ok) throw new Error("The evaluation service did not respond successfully.");
-      const data = await response.json();
-      setEvaluationResult(normalizeEvaluationResponse(data));
-      setStep("result");
-    } catch (err) {
-      setEvaluationResult({
-        score: "Demo Result",
-        summary: "This is a demo result because the n8n webhook URL is not connected yet. Once connected, the real evaluation will appear here after processing.",
-        strengths: ["Video uploaded successfully", "Practice type is included", "Webhook integration point exists"],
-        improvements: ["Connect the real n8n webhook", "Return score, summary, strengths, and improvements from n8n"],
-      });
-      setStep("result");
-    } finally {
-      setIsProcessing(false);
-      setIsEvaluating(false);
-    }
-  };
 
   const resetForMorePractice = () => {
     setVideoFile(null);
