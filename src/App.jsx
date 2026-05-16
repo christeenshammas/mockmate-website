@@ -204,8 +204,8 @@ const submitVideo = async () => {
     setError("Please generate an HR question before uploading your video.");
     return;
   }
-  if (videoFile.size > 4 * 1024 * 1024) {
-    setError("Video file is too large. Please upload a video under 4MB or trim it shorter.");
+if (videoFile.size > 50 * 1024 * 1024) {
+  setError("Video file is too large. Please upload a video under 4MB or trim it shorter.");
     return;
   }
   setError(null);
