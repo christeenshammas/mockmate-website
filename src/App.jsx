@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const N8N_WEBHOOK_URL = "https://aicoachju.site/proxy";
 
-
 const hrQuestions = [
   "Tell me about yourself.",
   "What is your biggest weakness, and what are you doing to improve it?",
@@ -195,44 +194,41 @@ export default function App() {
     setError(null);
     setVideoFile(file);
   };
-const submitVideo = async () => {
-  if (!videoFile || !practiceType) {
-    setError("Please select a practice type and upload a video first.");
-    return;
-  }
-  if (practiceType === "hr" && !selectedQuestion) {
-    setError("Please generate an HR question before uploading your video.");
-    return;
-  }
-if (videoFile.size > 50 * 1024 * 1024) {
-  setError("Video file is too large. Please upload a video under 50MB or trim it shorter.");
-    return;
-  }
-  setError(null);
-  setIsProcessing(true);
-  setIsEvaluating(true);
-  try {
-    const formData = new FormData();
-    formData.append("file", videoFile);
-    formData.append("practiceType", practiceType);
-    formData.append("practiceTypeLabel", practiceType === "hr" ? "HR Question" : "Self Introduction");
-    formData.append("question", practiceType === "hr" ? selectedQuestion : "Self-introduction");
-    formData.append("hrQuestion", practiceType === "hr" ? selectedQuestion : "");
-    await fetch(N8N_WEBHOOK_URL, { method: "POST", body: formData });
-    setEvaluationResult({ status: "processing" });
-    setStep("result");
-  } catch (err) {
-    setEvaluationResult({ status: "processing" });
-    setStep("result");
-  } finally {
-    setIsProcessing(false);
-    setIsEvaluating(false);
-  }
-};
 
-
-
-  
+  const submitVideo = async () => {
+    if (!videoFile || !practiceType) {
+      setError("Please select a practice type and upload a video first.");
+      return;
+    }
+    if (practiceType === "hr" && !selectedQuestion) {
+      setError("Please generate an HR question before uploading your video.");
+      return;
+    }
+    if (videoFile.size > 50 * 1024 * 1024) {
+      setError("Video file is too large. Please upload a video under 50MB or trim it shorter.");
+      return;
+    }
+    setError(null);
+    setIsProcessing(true);
+    setIsEvaluating(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", videoFile);
+      formData.append("practiceType", practiceType);
+      formData.append("practiceTypeLabel", practiceType === "hr" ? "HR Question" : "Self Introduction");
+      formData.append("question", practiceType === "hr" ? selectedQuestion : "Self-introduction");
+      formData.append("hrQuestion", practiceType === "hr" ? selectedQuestion : "");
+      await fetch(N8N_WEBHOOK_URL, { method: "POST", body: formData });
+      setEvaluationResult({ status: "processing" });
+      setStep("result");
+    } catch (err) {
+      setEvaluationResult({ status: "processing" });
+      setStep("result");
+    } finally {
+      setIsProcessing(false);
+      setIsEvaluating(false);
+    }
+  };
 
   const resetForMorePractice = () => {
     setVideoFile(null);
@@ -278,68 +274,73 @@ if (videoFile.size > 50 * 1024 * 1024) {
         )}
 
         {step === "upload" && (
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-4xl flex-1 items-center"><Card className="w-full border-sky-100 bg-white/80 shadow-2xl shadow-sky-100 backdrop-blur"><CardContent className="p-8"><div className="mb-7 text-center"><h2 className="mb-3 text-4xl font-black text-slate-950">Upload your practice video</h2><p className="text-slate-600">Your video will be sent to n8n with the selected practice type and, when relevant, the random HR question.</p></div><div className="mb-6 rounded-3xl border border-sky-200 bg-white p-5"><p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-700">Selected practice</p><p className="mt-2 text-lg font-bold text-slate-950">{practiceType === "hr" ? "HR Question" : "Self Introduction"}</p>{practiceType === "hr" && (<p className="mt-2 text-slate-600">Question sent with video: {selectedQuestion}</p>)}</div><div className="mb-6 rounded-3xl border-2 border-dashed border-sky-200 bg-sky-50/70 p-8 text-center"><input ref={fileInputRef} type="file" accept="video/mp4,video/quicktime,.mp4,.mov" onChange={handleFileChange} className="hidden" /><div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-white text-sky-700 shadow-sm"><Icon name="upload" size={30} /></div><h3 className="mb-2 text-xl font-bold text-slate-900">Select MP4 or MOV file</h3><p className="mb-5 text-sm text-slate-500">Maximum recommended length: 1 minute and 30 seconds.</p><Button type="button" disabled={isBusy} onClick={() => fileInputRef.current?.click()} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-5 font-semibold text-sky-700 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-60">Import file</Button>{videoFile && <p className="mt-4 text-sm font-semibold text-sky-700">Selected: {videoFile.name}</p>}</div>{error && <p className="mb-5 rounded-2xl bg-red-50 p-4 text-sm font-medium text-red-600">{error}</p>}<div className="flex flex-col gap-3 sm:flex-row sm:justify-between"><Button type="button" variant="ghost" onClick={() => setStep("practice")} disabled={isBusy} className="rounded-2xl px-6 py-5 text-slate-600">Back</Button><Button type="button" onClick={submitVideo} disabled={!videoFile || isBusy} className="rounded-2xl bg-sky-600 px-8 py-6 text-base font-bold text-white shadow-lg shadow-sky-200 hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none">{isBusy && <Icon name="loader" className="mr-2 animate-spin" size={20} />}{isBusy ? "Processing and evaluating..." : "Send file for evaluation"}</Button></div></CardContent></Card></motion.div>
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-4xl flex-1 items-center"><Card className="w-full border-sky-100 bg-white/80 shadow-2xl shadow-sky-100 backdrop-blur"><CardContent className="p-8"><div className="mb-7 text-center"><h2 className="mb-3 text-4xl font-black text-slate-950">Upload your practice video</h2><p className="text-slate-600">Your video will be sent to our AI system with the selected practice type and, when relevant, the random HR question.</p></div><div className="mb-6 rounded-3xl border border-sky-200 bg-white p-5"><p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-700">Selected practice</p><p className="mt-2 text-lg font-bold text-slate-950">{practiceType === "hr" ? "HR Question" : "Self Introduction"}</p>{practiceType === "hr" && (<p className="mt-2 text-slate-600">Question sent with video: {selectedQuestion}</p>)}</div><div className="mb-6 rounded-3xl border-2 border-dashed border-sky-200 bg-sky-50/70 p-8 text-center"><input ref={fileInputRef} type="file" accept="video/mp4,video/quicktime,.mp4,.mov" onChange={handleFileChange} className="hidden" /><div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-white text-sky-700 shadow-sm"><Icon name="upload" size={30} /></div><h3 className="mb-2 text-xl font-bold text-slate-900">Select MP4 or MOV file</h3><p className="mb-5 text-sm text-slate-500">Maximum recommended length: 1 minute and 30 seconds.</p><Button type="button" disabled={isBusy} onClick={() => fileInputRef.current?.click()} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-5 font-semibold text-sky-700 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-60">Import file</Button>{videoFile && <p className="mt-4 text-sm font-semibold text-sky-700">Selected: {videoFile.name}</p>}</div>{error && <p className="mb-5 rounded-2xl bg-red-50 p-4 text-sm font-medium text-red-600">{error}</p>}<div className="flex flex-col gap-3 sm:flex-row sm:justify-between"><Button type="button" variant="ghost" onClick={() => setStep("practice")} disabled={isBusy} className="rounded-2xl px-6 py-5 text-slate-600">Back</Button><Button type="button" onClick={submitVideo} disabled={!videoFile || isBusy} className="rounded-2xl bg-sky-600 px-8 py-6 text-base font-bold text-white shadow-lg shadow-sky-200 hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none">{isBusy && <Icon name="loader" className="mr-2 animate-spin" size={20} />}{isBusy ? "Uploading and submitting..." : "Send file for evaluation"}</Button></div></CardContent></Card></motion.div>
         )}
 
         {step === "result" && evaluationResult && (
-  <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-5xl flex-1 items-center">
-    <Card className="w-full border-sky-100 bg-white/85 shadow-2xl shadow-sky-100 backdrop-blur">
-      <CardContent className="p-8">
-        {evaluationResult.status === "processing" ? (
-          <div className="text-center py-12">
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-sky-100 text-sky-700">
-              <Icon name="loader" size={40} className="animate-spin" />
-            </div>
-            <h2 className="mb-3 text-4xl font-black text-slate-950">Video submitted successfully</h2>
-            <p className="mb-2 text-lg text-slate-600">Your video is being evaluated by our AI system.</p>
-            <p className="mb-8 text-base text-slate-500">This usually takes 2–3 minutes. Please check back shortly.</p>
-            <div className="mx-auto max-w-md rounded-3xl bg-sky-50 p-6 text-left">
-              <p className="text-sm font-semibold uppercase tracking-widest text-sky-700 mb-3">What happens next</p>
-              <div className="grid gap-3">
-                {["Speech clarity and storytelling is being analyzed", "Pace and vocal delivery is being evaluated", "Head and hand movement is being scored", "Final HR-style report is being generated"].map((item) => (
-                  <div key={item} className="flex items-center gap-3 text-sm text-slate-600">
-                    <Icon name="check" className="text-sky-600 shrink-0" size={18} />{item}
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-5xl flex-1 items-center">
+            <Card className="w-full border-sky-100 bg-white/85 shadow-2xl shadow-sky-100 backdrop-blur">
+              <CardContent className="p-8">
+                {evaluationResult.status === "processing" ? (
+                  <div className="text-center py-12">
+                    <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-sky-100 text-sky-700">
+                      <Icon name="loader" size={40} className="animate-spin" />
+                    </div>
+                    <h2 className="mb-3 text-4xl font-black text-slate-950">Video submitted successfully</h2>
+                    <p className="mb-2 text-lg text-slate-600">Your video is being evaluated by our AI system.</p>
+                    <p className="mb-8 text-base text-slate-500">This usually takes 2–3 minutes. The evaluation is running in the background.</p>
+                    <div className="mx-auto max-w-md rounded-3xl bg-sky-50 p-6 text-left">
+                      <p className="text-sm font-semibold uppercase tracking-widest text-sky-700 mb-3">What happens next</p>
+                      <div className="grid gap-3">
+                        {[
+                          "Speech clarity and storytelling is being analyzed",
+                          "Pace and vocal delivery is being evaluated",
+                          "Head and hand movement is being scored",
+                          "Final HR-style report is being generated",
+                        ].map((item) => (
+                          <div key={item} className="flex items-center gap-3 text-sm text-slate-600">
+                            <Icon name="check" className="text-sky-600 shrink-0" size={18} />{item}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                      <Button type="button" onClick={resetForMorePractice} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-6 text-base font-bold text-sky-700 hover:bg-sky-50">
+                        Practice another question<Icon name="help" className="ml-2" size={20} />
+                      </Button>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Button type="button" onClick={resetForMorePractice} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-6 text-base font-bold text-sky-700 hover:bg-sky-50">
-                Practice another question<Icon name="help" className="ml-2" size={20} />
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div>
-            <div className="mb-8 text-center">
-              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-sky-100 text-sky-700"><Icon name="check" size={34} /></div>
-              <h2 className="mb-2 text-4xl font-black text-slate-950">Your evaluation is ready</h2>
-              <p className="text-lg font-bold text-sky-700">Score: {evaluationResult.score}</p>
-            </div>
-            <div className="mb-7 rounded-3xl bg-sky-50 p-6">
-              <h3 className="mb-2 text-xl font-bold text-slate-900">Evaluation result</h3>
-              <p className="leading-8 text-slate-600">{evaluationResult.summary}</p>
-            </div>
-            <div className="mb-8 grid gap-5 md:grid-cols-2">
-              <div className="rounded-3xl border border-sky-100 bg-white p-6">
-                <h3 className="mb-4 text-lg font-bold text-slate-900">Strengths</h3>
-                <div className="grid gap-3">{evaluationResult.strengths?.map((item) => (<div key={item} className="flex items-center gap-3 text-sm text-slate-600"><Icon name="check" className="text-sky-600" size={18} />{item}</div>))}</div>
-              </div>
-              <div className="rounded-3xl border border-sky-100 bg-white p-6">
-                <h3 className="mb-4 text-lg font-bold text-slate-900">Improvements</h3>
-                <div className="grid gap-3">{evaluationResult.improvements?.map((item) => (<div key={item} className="flex items-center gap-3 text-sm text-slate-600"><Icon name="sparkles" className="text-cyan-600" size={18} />{item}</div>))}</div>
-              </div>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Button type="button" onClick={() => alert("Connect this button to your chat model.")} className="rounded-2xl bg-cyan-600 px-6 py-6 text-base font-bold text-white shadow-lg shadow-cyan-100 hover:bg-cyan-700">Continue with chat model<Icon name="message" className="ml-2" size={20} /></Button>
-              <Button type="button" onClick={resetForMorePractice} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-6 text-base font-bold text-sky-700 hover:bg-sky-50">Practice more HR questions<Icon name="help" className="ml-2" size={20} /></Button>
-            </div>
-          </div>
+                ) : (
+                  <div>
+                    <div className="mb-8 text-center">
+                      <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-sky-100 text-sky-700"><Icon name="check" size={34} /></div>
+                      <h2 className="mb-2 text-4xl font-black text-slate-950">Your evaluation is ready</h2>
+                      <p className="text-lg font-bold text-sky-700">Score: {evaluationResult.score}</p>
+                    </div>
+                    <div className="mb-7 rounded-3xl bg-sky-50 p-6">
+                      <h3 className="mb-2 text-xl font-bold text-slate-900">Evaluation result</h3>
+                      <p className="leading-8 text-slate-600">{evaluationResult.summary}</p>
+                    </div>
+                    <div className="mb-8 grid gap-5 md:grid-cols-2">
+                      <div className="rounded-3xl border border-sky-100 bg-white p-6">
+                        <h3 className="mb-4 text-lg font-bold text-slate-900">Strengths</h3>
+                        <div className="grid gap-3">{evaluationResult.strengths?.map((item) => (<div key={item} className="flex items-center gap-3 text-sm text-slate-600"><Icon name="check" className="text-sky-600" size={18} />{item}</div>))}</div>
+                      </div>
+                      <div className="rounded-3xl border border-sky-100 bg-white p-6">
+                        <h3 className="mb-4 text-lg font-bold text-slate-900">Improvements</h3>
+                        <div className="grid gap-3">{evaluationResult.improvements?.map((item) => (<div key={item} className="flex items-center gap-3 text-sm text-slate-600"><Icon name="sparkles" className="text-cyan-600" size={18} />{item}</div>))}</div>
+                      </div>
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <Button type="button" onClick={() => alert("Connect this button to your chat model.")} className="rounded-2xl bg-cyan-600 px-6 py-6 text-base font-bold text-white shadow-lg shadow-cyan-100 hover:bg-cyan-700">Continue with chat model<Icon name="message" className="ml-2" size={20} /></Button>
+                      <Button type="button" onClick={resetForMorePractice} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-6 text-base font-bold text-sky-700 hover:bg-sky-50">Practice more HR questions<Icon name="help" className="ml-2" size={20} /></Button>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
         )}
-      </CardContent>
-    </Card>
-  </motion.div>
-)}
       </section>
     </main>
   );
