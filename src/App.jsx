@@ -205,7 +205,7 @@ const submitVideo = async () => {
     return;
   }
 if (videoFile.size > 50 * 1024 * 1024) {
-  setError("Video file is too large. Please upload a video under 4MB or trim it shorter.");
+  setError("Video file is too large. Please upload a video under 50MB or trim it shorter.");
     return;
   }
   setError(null);
