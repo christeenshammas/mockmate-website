@@ -84,16 +84,20 @@ function normalizeEvaluationResponse(data) {
 }
 
 function runComponentSelfTests() {
-  const tests = [
-    { name: "accepts MP4 by MIME type", passed: validateVideoFile({ name: "answer.any", type: "video/mp4" }).valid === true },
-    { name: "accepts MOV by extension when MIME type is missing", passed: validateVideoFile({ name: "answer.MOV", type: "" }).valid === true },
-    { name: "rejects unsupported video formats", passed: validateVideoFile({ name: "answer.avi", type: "video/avi" }).valid === false },
-    { name: "normalizes empty n8n evaluation response", passed: normalizeEvaluationResponse({}).score === "N/A" },
-    { name: "has 30 HR questions", passed: hrQuestions.length === 30 },
-    { name: "random HR question returns a real question", passed: hrQuestions.includes(getRandomHrQuestion()) },
-  ];
-  const failedTests = tests.filter((test) => !test.passed);
-  if (failedTests.length > 0) console.warn("MockMate component self-tests failed:", failedTests);
+  try {
+    const tests = [
+      { name: "accepts MP4 by MIME type", passed: validateVideoFile({ name: "answer.any", type: "video/mp4" }).valid === true },
+      { name: "accepts MOV by extension when MIME type is missing", passed: validateVideoFile({ name: "answer.MOV", type: "" }).valid === true },
+      { name: "rejects unsupported video formats", passed: validateVideoFile({ name: "answer.avi", type: "video/avi" }).valid === false },
+      { name: "normalizes empty n8n evaluation response", passed: normalizeEvaluationResponse({}).score === "N/A" },
+      { name: "has 30 HR questions", passed: hrQuestions.length === 30 },
+      { name: "random HR question returns a real question", passed: hrQuestions.includes(getRandomHrQuestion()) },
+    ];
+    const failedTests = tests.filter((test) => !test.passed);
+    if (failedTests.length > 0) console.warn("MockMate component self-tests failed:", failedTests);
+  } catch (err) {
+    console.warn("Self-test error:", err.message);
+  }
 }
 
 if (typeof window !== "undefined") runComponentSelfTests();
