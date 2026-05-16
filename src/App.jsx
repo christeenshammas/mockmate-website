@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-const N8N_WEBHOOK_URL = "http://16.170.225.197:3000/proxy";
+const N8N_WEBHOOK_URL = "https://aicoachju.site/proxy";
 
 
 const hrQuestions = [
