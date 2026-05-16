@@ -195,13 +195,6 @@ export default function App() {
     setVideoFile(file);
   };
 
-  // compress
-if (videoFile.size > 4 * 1024 * 1024) {
-  setError("Video file is too large. Please upload a video under 4MB or trim it shorter.");
-  setIsProcessing(false);
-  setIsEvaluating(false);
-  return;
-}
 
   
   const submitVideo = async () => {
@@ -213,6 +206,14 @@ if (videoFile.size > 4 * 1024 * 1024) {
       setError("Please generate an HR question before uploading your video.");
       return;
     }
+    
+  // compress
+if (videoFile.size > 4 * 1024 * 1024) {
+  setError("Video file is too large. Please upload a video under 4MB or trim it shorter.");
+  setIsProcessing(false);
+  setIsEvaluating(false);
+  return;
+}
     setError(null);
     setIsProcessing(true);
     setIsEvaluating(true);
