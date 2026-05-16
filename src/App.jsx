@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-const N8N_WEBHOOK_URL = "https://safaa85.app.n8n.cloud/webhook/f8358328-b12b-4925-acca-891f7893bd32";
+const N8N_WEBHOOK_URL = "/api/proxy";
 
 const hrQuestions = [
   "Tell me about yourself.",
