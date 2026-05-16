@@ -191,6 +191,15 @@ export default function App() {
     setVideoFile(file);
   };
 
+  // compress
+if (videoFile.size > 4 * 1024 * 1024) {
+  setError("Video file is too large. Please upload a video under 4MB or trim it shorter.");
+  setIsProcessing(false);
+  setIsEvaluating(false);
+  return;
+}
+
+  
   const submitVideo = async () => {
     if (!videoFile || !practiceType) {
       setError("Please select a practice type and upload a video first.");
