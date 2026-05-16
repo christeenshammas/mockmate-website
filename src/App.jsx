@@ -281,8 +281,64 @@ const submitVideo = async () => {
         )}
 
         {step === "result" && evaluationResult && (
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-5xl flex-1 items-center"><Card className="w-full border-sky-100 bg-white/85 shadow-2xl shadow-sky-100 backdrop-blur"><CardContent className="p-8"><div className="mb-8 text-center"><div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-sky-100 text-sky-700"><Icon name="check" size={34} /></div><h2 className="mb-2 text-4xl font-black text-slate-950">Your evaluation is ready</h2><p className="text-lg font-bold text-sky-700">Score: {evaluationResult.score}</p></div><div className="mb-7 rounded-3xl bg-sky-50 p-6"><h3 className="mb-2 text-xl font-bold text-slate-900">Evaluation result</h3><p className="leading-8 text-slate-600">{evaluationResult.summary}</p></div><div className="mb-8 grid gap-5 md:grid-cols-2"><div className="rounded-3xl border border-sky-100 bg-white p-6"><h3 className="mb-4 text-lg font-bold text-slate-900">Strengths</h3><div className="grid gap-3">{evaluationResult.strengths.map((item) => (<div key={item} className="flex items-center gap-3 text-sm text-slate-600"><Icon name="check" className="text-sky-600" size={18} />{item}</div>))}</div></div><div className="rounded-3xl border border-sky-100 bg-white p-6"><h3 className="mb-4 text-lg font-bold text-slate-900">Improvements</h3><div className="grid gap-3">{evaluationResult.improvements.map((item) => (<div key={item} className="flex items-center gap-3 text-sm text-slate-600"><Icon name="sparkles" className="text-cyan-600" size={18} />{item}</div>))}</div></div></div><div className="grid gap-4 md:grid-cols-2"><Button type="button" onClick={() => alert("Connect this button to your chat model route or chatbot component.")} className="rounded-2xl bg-cyan-600 px-6 py-6 text-base font-bold text-white shadow-lg shadow-cyan-100 hover:bg-cyan-700">Continue with chat model<Icon name="message" className="ml-2" size={20} /></Button><Button type="button" onClick={resetForMorePractice} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-6 text-base font-bold text-sky-700 hover:bg-sky-50">Practice more HR questions<Icon name="help" className="ml-2" size={20} /></Button></div></CardContent></Card></motion.div>
+  <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-5xl flex-1 items-center">
+    <Card className="w-full border-sky-100 bg-white/85 shadow-2xl shadow-sky-100 backdrop-blur">
+      <CardContent className="p-8">
+        {evaluationResult.status === "processing" ? (
+          <div className="text-center py-12">
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-sky-100 text-sky-700">
+              <Icon name="loader" size={40} className="animate-spin" />
+            </div>
+            <h2 className="mb-3 text-4xl font-black text-slate-950">Video submitted successfully</h2>
+            <p className="mb-2 text-lg text-slate-600">Your video is being evaluated by our AI system.</p>
+            <p className="mb-8 text-base text-slate-500">This usually takes 2–3 minutes. Please check back shortly.</p>
+            <div className="mx-auto max-w-md rounded-3xl bg-sky-50 p-6 text-left">
+              <p className="text-sm font-semibold uppercase tracking-widest text-sky-700 mb-3">What happens next</p>
+              <div className="grid gap-3">
+                {["Speech clarity and storytelling is being analyzed", "Pace and vocal delivery is being evaluated", "Head and hand movement is being scored", "Final HR-style report is being generated"].map((item) => (
+                  <div key={item} className="flex items-center gap-3 text-sm text-slate-600">
+                    <Icon name="check" className="text-sky-600 shrink-0" size={18} />{item}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <Button type="button" onClick={resetForMorePractice} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-6 text-base font-bold text-sky-700 hover:bg-sky-50">
+                Practice another question<Icon name="help" className="ml-2" size={20} />
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div className="mb-8 text-center">
+              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-sky-100 text-sky-700"><Icon name="check" size={34} /></div>
+              <h2 className="mb-2 text-4xl font-black text-slate-950">Your evaluation is ready</h2>
+              <p className="text-lg font-bold text-sky-700">Score: {evaluationResult.score}</p>
+            </div>
+            <div className="mb-7 rounded-3xl bg-sky-50 p-6">
+              <h3 className="mb-2 text-xl font-bold text-slate-900">Evaluation result</h3>
+              <p className="leading-8 text-slate-600">{evaluationResult.summary}</p>
+            </div>
+            <div className="mb-8 grid gap-5 md:grid-cols-2">
+              <div className="rounded-3xl border border-sky-100 bg-white p-6">
+                <h3 className="mb-4 text-lg font-bold text-slate-900">Strengths</h3>
+                <div className="grid gap-3">{evaluationResult.strengths?.map((item) => (<div key={item} className="flex items-center gap-3 text-sm text-slate-600"><Icon name="check" className="text-sky-600" size={18} />{item}</div>))}</div>
+              </div>
+              <div className="rounded-3xl border border-sky-100 bg-white p-6">
+                <h3 className="mb-4 text-lg font-bold text-slate-900">Improvements</h3>
+                <div className="grid gap-3">{evaluationResult.improvements?.map((item) => (<div key={item} className="flex items-center gap-3 text-sm text-slate-600"><Icon name="sparkles" className="text-cyan-600" size={18} />{item}</div>))}</div>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Button type="button" onClick={() => alert("Connect this button to your chat model.")} className="rounded-2xl bg-cyan-600 px-6 py-6 text-base font-bold text-white shadow-lg shadow-cyan-100 hover:bg-cyan-700">Continue with chat model<Icon name="message" className="ml-2" size={20} /></Button>
+              <Button type="button" onClick={resetForMorePractice} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-6 text-base font-bold text-sky-700 hover:bg-sky-50">Practice more HR questions<Icon name="help" className="ml-2" size={20} /></Button>
+            </div>
+          </div>
         )}
+      </CardContent>
+    </Card>
+  </motion.div>
+)}
       </section>
     </main>
   );
