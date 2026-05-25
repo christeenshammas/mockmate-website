@@ -221,10 +221,13 @@ export default function App() {
       await fetch(N8N_WEBHOOK_URL, { method: "POST", body: formData });
       setEvaluationResult({ status: "processing" });
       setStep("result");
-    } catch (err) {
-      setEvaluationResult({ status: "processing" });
-      setStep("result");
-    } finally {
+    }
+  } catch (err) {
+  console.error("Submission error:", err);
+  setError("Failed to submit video. Please try again.");
+} 
+    
+    finally {
       setIsProcessing(false);
       setIsEvaluating(false);
     }
