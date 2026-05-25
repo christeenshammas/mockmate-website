@@ -71,14 +71,17 @@ function validateVideoFile(file) {
 }
 
 function normalizeEvaluationResponse(data) {
+  const raw = Array.isArray(data) ? data[0]?.output : data?.output;
+  const cleaned = raw?.replace(/```json\n?|\n?```/g, "").trim();
+  const parsed = cleaned ? JSON.parse(cleaned) : data;
   return {
-    score: data?.final_score ? `${data.final_score} / 10` : "N/A",
-    summary: data?.hr_recommendation ?? "No summary available.",
-    strengths: Array.isArray(data?.top_strengths) && data.top_strengths.length > 0
-      ? data.top_strengths
+    score: parsed?.final_score ? `${parsed.final_score} / 10` : "N/A",
+    summary: parsed?.hr_recommendation ?? "No summary available.",
+    strengths: Array.isArray(parsed?.top_strengths) && parsed.top_strengths.length > 0
+      ? parsed.top_strengths
       : ["No strengths data available."],
-    improvements: Array.isArray(data?.priority_areas) && data.priority_areas.length > 0
-      ? data.priority_areas
+    improvements: Array.isArray(parsed?.priority_areas) && parsed.priority_areas.length > 0
+      ? parsed.priority_areas
       : ["No improvement data available."],
   };
 }
