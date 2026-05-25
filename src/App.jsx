@@ -218,9 +218,11 @@ export default function App() {
       formData.append("practiceTypeLabel", practiceType === "hr" ? "HR Question" : "Self Introduction");
       formData.append("question", practiceType === "hr" ? selectedQuestion : "Self-introduction");
       formData.append("hrQuestion", practiceType === "hr" ? selectedQuestion : "");
-      await fetch(N8N_WEBHOOK_URL, { method: "POST", body: formData });
-      setEvaluationResult({ status: "processing" });
-      setStep("result");
+     const response = await fetch(N8N_WEBHOOK_URL, { method: "POST", body: formData });
+    const result = await response.json();
+    const normalized = normalizeEvaluationResponse(result);
+    setEvaluationResult(normalized);
+    setStep("result");
     }
   } catch (err) {
   console.error("Submission error:", err);
