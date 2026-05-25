@@ -221,11 +221,13 @@ export default function App() {
       formData.append("practiceTypeLabel", practiceType === "hr" ? "HR Question" : "Self Introduction");
       formData.append("question", practiceType === "hr" ? selectedQuestion : "Self-introduction");
       formData.append("hrQuestion", practiceType === "hr" ? selectedQuestion : "");
-      const response = await fetch(N8N_WEBHOOK_URL, { method: "POST", body: formData });
-      const result = await response.json();
-      const normalized = normalizeEvaluationResponse(result);
-      setEvaluationResult(normalized);
-      setStep("result");
+     const response = await fetch(N8N_WEBHOOK_URL, { method: "POST", body: formData });
+const result = await response.json();
+console.log("RAW RESULT:", JSON.stringify(result));
+const normalized = normalizeEvaluationResponse(result);
+console.log("NORMALIZED:", JSON.stringify(normalized));
+setEvaluationResult(normalized);
+setStep("result");
     } catch (err) {
       console.error("Submission error:", err);
       setError("Failed to submit video. Please try again.");
