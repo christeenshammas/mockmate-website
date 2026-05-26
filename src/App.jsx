@@ -193,6 +193,7 @@ function Icon({ name, size = 22, className = "" }) {
     shirt: <path d="M8 4 4 6l2 5 2-1v10h8V10l2 1 2-5-4-2a4 4 0 0 1-8 0Z" />,
     fileVideo: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" /><path d="M14 2v6h6" /><path d="m10 13 4-2.5v5L10 13Z" /></>,
     help: <><circle cx="12" cy="12" r="9" /><path d="M9.5 9a2.8 2.8 0 0 1 5 1.7c0 2-2.5 2.3-2.5 4" /><path d="M12 18h.01" /></>,
+    interview: <><circle cx="5" cy="4.5" r="1.6" /><line x1="5" y1="6.1" x2="5" y2="11" /><line x1="2.5" y1="8.5" x2="7.5" y2="8.5" /><line x1="3" y1="11" x2="3" y2="14" /><line x1="7" y1="11" x2="7" y2="14" /><circle cx="19" cy="4.5" r="1.6" /><line x1="19" y1="6.1" x2="19" y2="11" /><line x1="16.5" y1="8.5" x2="21.5" y2="8.5" /><line x1="17" y1="11" x2="17" y2="14" /><line x1="21" y1="11" x2="21" y2="14" /><line x1="1" y1="11" x2="23" y2="11" /><rect x="9" y="1" width="9" height="6" rx="1.2" /><line x1="10.5" y1="3" x2="16.5" y2="3" /><line x1="10.5" y1="5" x2="15" y2="5" /><path d="M9 7 L7.5 9.5 L10 9.5" /></>,
     sparkles: <><path d="M12 3 10.5 8.5 5 10l5.5 1.5L12 17l1.5-5.5L19 10l-5.5-1.5L12 3Z" /><path d="M5 3v4" /><path d="M3 5h4" /><path d="M19 17v4" /><path d="M17 19h4" /></>,
   };
   return <svg {...sharedProps}>{icons[name] || icons.sparkles}</svg>;
@@ -240,14 +241,14 @@ function TipsLoader() {
         setIdx((prev) => (prev + 1) % allTips.length);
         setVisible(true);
       }, 400);
-    }, 4500);
+    }, 7000);
     return () => clearInterval(timer);
   }, []);
 
   const t = allTips[idx];
 
   return (
-    <div className="mx-auto mt-5 w-3/4"
+    <div className="mx-auto mt-5 w-full"
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0px)" : "translateY(10px)",
@@ -374,7 +375,7 @@ export default function App() {
       <section className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col px-5 py-8 sm:px-8">
         <header className="mb-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-600 text-white shadow-lg shadow-sky-200"><Icon name="sparkles" size={24} /></div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-600 text-white shadow-lg shadow-sky-200"><Icon name="interview" size={26} /></div>
             <div><p className="text-sm font-semibold uppercase tracking-[0.25em] text-sky-700">MockMate</p><p className="text-sm text-slate-500">Multi-Agent AI Interview Practice</p></div>
           </div>
           <div className="flex flex-wrap gap-3"><StepPill number="1" label="Start" active={activeStep === 1} /><StepPill number="2" label="Prepare" active={activeStep === 2} /><StepPill number="3" label="Upload" active={activeStep === 3} /><StepPill number="4" label="Result" active={activeStep === 4} /></div>
@@ -402,7 +403,7 @@ export default function App() {
         )}
 
         {step === "upload" && (
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center">
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center">
             <Card className="w-full border-sky-100 bg-white/80 shadow-2xl shadow-sky-100 backdrop-blur">
               <CardContent className="p-8">
                 {isBusy ? (
@@ -448,7 +449,7 @@ export default function App() {
         )}
 
         {step === "result" && evaluationResult && (
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-5xl flex-1 items-center">
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-6xl flex-1 items-center">
             <Card className="w-full border-sky-100 bg-white/85 shadow-2xl shadow-sky-100 backdrop-blur">
               <CardContent className="p-8">
                 <div>
