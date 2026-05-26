@@ -72,8 +72,8 @@ const interviewTips = [
   },
   {
     label: "Brain fact",
-    color: "#1d4ed8",
-    bg: "#eff6ff",
+    color: "#0ea5e9",
+    bg: "#bae6fd",
     icon: "sparkles",
     tips: [
       "A real smile — one that reaches your eyes — triggers mirror neurons in the interviewer's brain, creating instant connection.",
@@ -83,7 +83,7 @@ const interviewTips = [
   },
   {
     label: "Psychology trick",
-    color: "#0ea5e9",
+    color: "#075985",
     bg: "#e0f2fe",
     icon: "message",
     tips: [
@@ -94,8 +94,8 @@ const interviewTips = [
   },
   {
     label: "Body language",
-    color: "#075985",
-    bg: "#bae6fd",
+    color: "#0c4a6e",
+    bg: "#f0f9ff",
     icon: "video",
     tips: [
       "Your legs reveal what your mind is thinking — if they point at the exit, the interviewer notices. Face them squarely.",
@@ -105,8 +105,8 @@ const interviewTips = [
   },
   {
     label: "Hire secret",
-    color: "#1e40af",
-    bg: "#dbeafe",
+    color: "#0284c7",
+    bg: "#bae6fd",
     icon: "mic",
     tips: [
       "Skills can be taught. Personality can't. Most recruiters today are choosing who you are over what you know.",
