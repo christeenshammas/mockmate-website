@@ -1,5 +1,5 @@
-import React, { useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import React, { useMemo, useRef, useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -116,6 +116,10 @@ const interviewTips = [
   },
 ];
 
+const allTips = interviewTips.flatMap((cat) =>
+  cat.tips.map((tip) => ({ label: cat.label, color: cat.color, bg: cat.bg, icon: cat.icon, tip }))
+);
+
 function getRandomHrQuestion(previousQuestion = "") {
   if (hrQuestions.length === 0) return "Tell me about yourself.";
   if (hrQuestions.length === 1) return hrQuestions[0];
@@ -132,7 +136,7 @@ function validateVideoFile(file) {
   const validExtensions = [".mp4", ".mov"];
   const fileName = file.name?.toLowerCase() || "";
   const hasValidType = validMimeTypes.includes(file.type);
-  const hasValidExtension = validExtensions.some((extension) => fileName.endsWith(extension));
+  const hasValidExtension = validExtensions.some((ext) => fileName.endsWith(ext));
   if (!hasValidType && !hasValidExtension) {
     return { valid: false, message: "Please upload a valid MP4 or MOV video file." };
   }
@@ -165,7 +169,7 @@ function runComponentSelfTests() {
       { name: "has 30 HR questions", passed: hrQuestions.length === 30 },
       { name: "random HR question returns a real question", passed: hrQuestions.includes(getRandomHrQuestion()) },
     ];
-    const failedTests = tests.filter((test) => !test.passed);
+    const failedTests = tests.filter((t) => !t.passed);
     if (failedTests.length > 0) console.warn("MockMate component self-tests failed:", failedTests);
   } catch (err) {
     console.warn("Self-test error:", err.message);
@@ -226,54 +230,65 @@ function PracticeTypeCard({ title, description, icon, selected, onClick }) {
 }
 
 function TipsLoader() {
-  const [indices, setIndices] = useState([0, 0, 0, 0, 0, 0]);
+  const [idx, setIdx] = useState(0);
+  const [visible, setVisible] = useState(true);
 
-  React.useEffect(() => {
-    const intervals = [4200, 5000, 4600, 5400, 4800, 5200];
-    const timers = intervals.map((ms, i) =>
-      setInterval(() => {
-        setIndices((prev) => {
-          const next = [...prev];
-          next[i] = (next[i] + 1) % 3;
-          return next;
-        });
-      }, ms)
-    );
-    return () => timers.forEach(clearInterval);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setIdx((prev) => (prev + 1) % allTips.length);
+        setVisible(true);
+      }, 500);
+    }, 4500);
+    return () => clearInterval(timer);
   }, []);
 
+  const current = allTips[idx];
+
   return (
-    <div className="mt-6">
-      <p className="mb-3 text-center text-sm font-medium text-slate-400 uppercase tracking-widest">While you wait</p>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {interviewTips.map((cat, i) => (
+    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-3xl bg-white/95 backdrop-blur-sm px-8">
+      <div className="mb-6 flex items-center gap-3">
+        <Icon name="loader" className="animate-spin text-sky-500" size={18} />
+        <span className="text-sm font-medium text-slate-400 uppercase tracking-widest">Analysing your video</span>
+      </div>
+
+      <div
+        className="w-full max-w-md rounded-3xl p-6 transition-all duration-500"
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateY(0)" : "translateY(10px)",
+          background: current.bg,
+          borderLeft: `4px solid ${current.color}`,
+        }}
+      >
+        <div className="mb-3 flex items-center gap-2">
           <div
-            key={cat.label}
-            className="rounded-2xl border border-sky-100 bg-white/80 p-4 shadow-sm"
-            style={{ borderLeft: `3px solid ${cat.color}` }}
+            className="flex h-9 w-9 items-center justify-center rounded-2xl"
+            style={{ background: "white", color: current.color }}
           >
-            <div className="mb-2 flex items-center gap-2">
-              <div
-                className="flex h-8 w-8 items-center justify-center rounded-xl"
-                style={{ background: cat.bg, color: cat.color }}
-              >
-                <Icon name={cat.icon} size={16} />
-              </div>
-              <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: cat.color }}>
-                {cat.label}
-              </span>
-            </div>
-            <p className="text-sm leading-6 text-slate-600">{cat.tips[indices[i]]}</p>
-            <div className="mt-2 flex gap-1">
-              {cat.tips.map((_, d) => (
-                <div
-                  key={d}
-                  className="h-1.5 w-1.5 rounded-full transition-all duration-300"
-                  style={{ background: d === indices[i] ? cat.color : "#e2e8f0" }}
-                />
-              ))}
-            </div>
+            <Icon name={current.icon} size={18} />
           </div>
+          <span
+            className="text-xs font-bold uppercase tracking-widest"
+            style={{ color: current.color }}
+          >
+            {current.label}
+          </span>
+        </div>
+        <p className="text-base leading-7 text-slate-700">{current.tip}</p>
+      </div>
+
+      <div className="mt-6 flex gap-1.5">
+        {allTips.map((_, i) => (
+          <div
+            key={i}
+            className="h-1.5 rounded-full transition-all duration-500"
+            style={{
+              width: i === idx ? "20px" : "6px",
+              background: i === idx ? current.color : "#e2e8f0",
+            }}
+          />
         ))}
       </div>
     </div>
@@ -406,7 +421,8 @@ export default function App() {
 
         {step === "upload" && (
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-4xl flex-1 items-center">
-            <Card className="w-full border-sky-100 bg-white/80 shadow-2xl shadow-sky-100 backdrop-blur">
+            <Card className="relative w-full overflow-hidden border-sky-100 bg-white/80 shadow-2xl shadow-sky-100 backdrop-blur">
+              {isBusy && <TipsLoader />}
               <CardContent className="p-8">
                 <div className="mb-7 text-center">
                   <h2 className="mb-3 text-4xl font-black text-slate-950">Upload your practice video</h2>
@@ -433,7 +449,6 @@ export default function App() {
                     {isBusy ? "Uploading and submitting..." : "Send file for evaluation"}
                   </Button>
                 </div>
-                {isBusy && <TipsLoader />}
               </CardContent>
             </Card>
           </motion.div>
