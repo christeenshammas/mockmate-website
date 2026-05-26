@@ -375,7 +375,14 @@ export default function App() {
       <section className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col px-5 py-8 sm:px-8">
         <header className="mb-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-600 text-white shadow-lg shadow-sky-200"><Icon name="interview" size={26} /></div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-600 text-white shadow-lg shadow-sky-200">
+  <svg viewBox="0 0 40 44" width="32" height="36" fill="currentColor" aria-hidden="true">
+    <path d="M6 0h22a4 4 0 0 1 4 4v11a4 4 0 0 1-4 4H16l-4 6-2-6H6a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4z"/>
+    <path d="M26 3h6a4 4 0 0 1 4 4v7a4 4 0 0 1-4 4h-1l-2 3-1-3h-2a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4z" opacity="0.55"/>
+    <circle cx="17" cy="30" r="6"/>
+    <path d="M7 37c-4 1-5 4-5 6h30c0-2-1-5-5-6l-4 2H11z"/>
+  </svg>
+</div>
             <div><p className="text-sm font-semibold uppercase tracking-[0.25em] text-sky-700">MockMate</p><p className="text-sm text-slate-500">Multi-Agent AI Interview Practice</p></div>
           </div>
           <div className="flex flex-wrap gap-3"><StepPill number="1" label="Start" active={activeStep === 1} /><StepPill number="2" label="Prepare" active={activeStep === 2} /><StepPill number="3" label="Upload" active={activeStep === 3} /><StepPill number="4" label="Result" active={activeStep === 4} /></div>
