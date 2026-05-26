@@ -47,6 +47,75 @@ const prepInstructions = [
   { icon: "fileVideo", title: "File Format", text: "Upload or record a video in MP4 or MOV format." },
 ];
 
+const interviewTips = [
+  {
+    label: "Did you know?",
+    color: "#7F77DD",
+    bg: "#EEEDFE",
+    icon: "clock",
+    tips: [
+      "Recruiters form their first impression in just 7 seconds — before you've answered a single question.",
+      "55% of communication is body language, 38% is tone of voice, and only 7% is the actual words you say.",
+      "Interviewers often decide within the first minute whether they're excited about a candidate — the rest is just confirmation.",
+    ],
+  },
+  {
+    label: "Quick tip",
+    color: "#0F6E56",
+    bg: "#E1F5EE",
+    icon: "check",
+    tips: [
+      "A firm, 2–3 second handshake has been shown to measurably increase your odds of getting hired. There's literally a study on it.",
+      "Maintain eye contact for about 60–70% of the conversation — enough to feel engaged, not enough to feel intense.",
+      "Sit with your back straight and shoulders open. It signals confidence before you've said a word.",
+    ],
+  },
+  {
+    label: "Brain fact",
+    color: "#993C1D",
+    bg: "#FAECE7",
+    icon: "sparkles",
+    tips: [
+      "A real smile — one that reaches your eyes — triggers mirror neurons in the interviewer's brain, creating instant connection.",
+      "Your brain releases oxytocin (the trust chemical) when someone holds genuine eye contact with you.",
+      "Nodding once while the interviewer speaks signals you're listening. Double nods rush them. Triple nods confuse them.",
+    ],
+  },
+  {
+    label: "Psychology trick",
+    color: "#185FA5",
+    bg: "#E6F1FB",
+    icon: "message",
+    tips: [
+      "Subtly mirroring the interviewer's posture and gestures makes them feel unconsciously drawn to you.",
+      "People tend to favor candidates who reflect their energy back — calm with calm, animated with animated.",
+      "When you nod slightly while answering, you pull the interviewer emotionally into what you're saying.",
+    ],
+  },
+  {
+    label: "Body language",
+    color: "#854F0B",
+    bg: "#FAEEDA",
+    icon: "video",
+    tips: [
+      "Your legs reveal what your mind is thinking — if they point at the exit, the interviewer notices. Face them squarely.",
+      "Crossed arms signal resistance or disinterest — even if you're just cold. Keep them open or resting on the table.",
+      "Touching your face while answering can read as deception to a recruiter, even if you're just nervous.",
+    ],
+  },
+  {
+    label: "Hire secret",
+    color: "#993556",
+    bg: "#FBEAF0",
+    icon: "mic",
+    tips: [
+      "Skills can be taught. Personality can't. Most recruiters today are choosing who you are over what you know.",
+      "Traits like reliability and curiosity are weighted more heavily than GPA or years of experience in many industries.",
+      "Being genuinely interested in the role matters more than having a perfect answer — enthusiasm is contagious.",
+    ],
+  },
+];
+
 function getRandomHrQuestion(previousQuestion = "") {
   if (hrQuestions.length === 0) return "Tell me about yourself.";
   if (hrQuestions.length === 1) return hrQuestions[0];
@@ -156,6 +225,61 @@ function PracticeTypeCard({ title, description, icon, selected, onClick }) {
   );
 }
 
+function TipsLoader() {
+  const [indices, setIndices] = useState([0, 0, 0, 0, 0, 0]);
+
+  React.useEffect(() => {
+    const intervals = [4200, 5000, 4600, 5400, 4800, 5200];
+    const timers = intervals.map((ms, i) =>
+      setInterval(() => {
+        setIndices((prev) => {
+          const next = [...prev];
+          next[i] = (next[i] + 1) % 3;
+          return next;
+        });
+      }, ms)
+    );
+    return () => timers.forEach(clearInterval);
+  }, []);
+
+  return (
+    <div className="mt-6">
+      <p className="mb-3 text-center text-sm font-medium text-slate-400 uppercase tracking-widest">While you wait</p>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {interviewTips.map((cat, i) => (
+          <div
+            key={cat.label}
+            className="rounded-2xl border border-sky-100 bg-white/80 p-4 shadow-sm"
+            style={{ borderLeft: `3px solid ${cat.color}` }}
+          >
+            <div className="mb-2 flex items-center gap-2">
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-xl"
+                style={{ background: cat.bg, color: cat.color }}
+              >
+                <Icon name={cat.icon} size={16} />
+              </div>
+              <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: cat.color }}>
+                {cat.label}
+              </span>
+            </div>
+            <p className="text-sm leading-6 text-slate-600">{cat.tips[indices[i]]}</p>
+            <div className="mt-2 flex gap-1">
+              {cat.tips.map((_, d) => (
+                <div
+                  key={d}
+                  className="h-1.5 w-1.5 rounded-full transition-all duration-300"
+                  style={{ background: d === indices[i] ? cat.color : "#e2e8f0" }}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [step, setStep] = useState("welcome");
   const [practiceType, setPracticeType] = useState(null);
@@ -221,13 +345,13 @@ export default function App() {
       formData.append("practiceTypeLabel", practiceType === "hr" ? "HR Question" : "Self Introduction");
       formData.append("question", practiceType === "hr" ? selectedQuestion : "Self-introduction");
       formData.append("hrQuestion", practiceType === "hr" ? selectedQuestion : "");
-     const response = await fetch(N8N_WEBHOOK_URL, { method: "POST", body: formData });
-const result = await response.json();
-console.log("RAW RESULT:", JSON.stringify(result));
-const normalized = normalizeEvaluationResponse(result);
-console.log("NORMALIZED:", JSON.stringify(normalized));
-setEvaluationResult(normalized);
-setStep("result");
+      const response = await fetch(N8N_WEBHOOK_URL, { method: "POST", body: formData });
+      const result = await response.json();
+      console.log("RAW RESULT:", JSON.stringify(result));
+      const normalized = normalizeEvaluationResponse(result);
+      console.log("NORMALIZED:", JSON.stringify(normalized));
+      setEvaluationResult(normalized);
+      setStep("result");
     } catch (err) {
       console.error("Submission error:", err);
       setError("Failed to submit video. Please try again.");
@@ -281,7 +405,38 @@ setStep("result");
         )}
 
         {step === "upload" && (
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-4xl flex-1 items-center"><Card className="w-full border-sky-100 bg-white/80 shadow-2xl shadow-sky-100 backdrop-blur"><CardContent className="p-8"><div className="mb-7 text-center"><h2 className="mb-3 text-4xl font-black text-slate-950">Upload your practice video</h2><p className="text-slate-600">Your video will be sent to our AI system with the selected practice type and, when relevant, the random HR question.</p></div><div className="mb-6 rounded-3xl border border-sky-200 bg-white p-5"><p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-700">Selected practice</p><p className="mt-2 text-lg font-bold text-slate-950">{practiceType === "hr" ? "HR Question" : "Self Introduction"}</p>{practiceType === "hr" && (<p className="mt-2 text-slate-600">Question sent with video: {selectedQuestion}</p>)}</div><div className="mb-6 rounded-3xl border-2 border-dashed border-sky-200 bg-sky-50/70 p-8 text-center"><input ref={fileInputRef} type="file" accept="video/mp4,video/quicktime,.mp4,.mov" onChange={handleFileChange} className="hidden" /><div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-white text-sky-700 shadow-sm"><Icon name="upload" size={30} /></div><h3 className="mb-2 text-xl font-bold text-slate-900">Select MP4 or MOV file</h3><p className="mb-5 text-sm text-slate-500">Maximum recommended length: 1 minute and 30 seconds.</p><Button type="button" disabled={isBusy} onClick={() => fileInputRef.current?.click()} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-5 font-semibold text-sky-700 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-60">Import file</Button>{videoFile && <p className="mt-4 text-sm font-semibold text-sky-700">Selected: {videoFile.name}</p>}</div>{error && <p className="mb-5 rounded-2xl bg-red-50 p-4 text-sm font-medium text-red-600">{error}</p>}<div className="flex flex-col gap-3 sm:flex-row sm:justify-between"><Button type="button" variant="ghost" onClick={() => setStep("practice")} disabled={isBusy} className="rounded-2xl px-6 py-5 text-slate-600">Back</Button><Button type="button" onClick={submitVideo} disabled={!videoFile || isBusy} className="rounded-2xl bg-sky-600 px-8 py-6 text-base font-bold text-white shadow-lg shadow-sky-200 hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none">{isBusy && <Icon name="loader" className="mr-2 animate-spin" size={20} />}{isBusy ? "Uploading and submitting..." : "Send file for evaluation"}</Button></div></CardContent></Card></motion.div>
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-4xl flex-1 items-center">
+            <Card className="w-full border-sky-100 bg-white/80 shadow-2xl shadow-sky-100 backdrop-blur">
+              <CardContent className="p-8">
+                <div className="mb-7 text-center">
+                  <h2 className="mb-3 text-4xl font-black text-slate-950">Upload your practice video</h2>
+                  <p className="text-slate-600">Your video will be sent to our AI system with the selected practice type and, when relevant, the random HR question.</p>
+                </div>
+                <div className="mb-6 rounded-3xl border border-sky-200 bg-white p-5">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-700">Selected practice</p>
+                  <p className="mt-2 text-lg font-bold text-slate-950">{practiceType === "hr" ? "HR Question" : "Self Introduction"}</p>
+                  {practiceType === "hr" && (<p className="mt-2 text-slate-600">Question sent with video: {selectedQuestion}</p>)}
+                </div>
+                <div className="mb-6 rounded-3xl border-2 border-dashed border-sky-200 bg-sky-50/70 p-8 text-center">
+                  <input ref={fileInputRef} type="file" accept="video/mp4,video/quicktime,.mp4,.mov" onChange={handleFileChange} className="hidden" />
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-white text-sky-700 shadow-sm"><Icon name="upload" size={30} /></div>
+                  <h3 className="mb-2 text-xl font-bold text-slate-900">Select MP4 or MOV file</h3>
+                  <p className="mb-5 text-sm text-slate-500">Maximum recommended length: 1 minute and 30 seconds.</p>
+                  <Button type="button" disabled={isBusy} onClick={() => fileInputRef.current?.click()} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-5 font-semibold text-sky-700 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-60">Import file</Button>
+                  {videoFile && <p className="mt-4 text-sm font-semibold text-sky-700">Selected: {videoFile.name}</p>}
+                </div>
+                {error && <p className="mb-5 rounded-2xl bg-red-50 p-4 text-sm font-medium text-red-600">{error}</p>}
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+                  <Button type="button" variant="ghost" onClick={() => setStep("practice")} disabled={isBusy} className="rounded-2xl px-6 py-5 text-slate-600">Back</Button>
+                  <Button type="button" onClick={submitVideo} disabled={!videoFile || isBusy} className="rounded-2xl bg-sky-600 px-8 py-6 text-base font-bold text-white shadow-lg shadow-sky-200 hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none">
+                    {isBusy && <Icon name="loader" className="mr-2 animate-spin" size={20} />}
+                    {isBusy ? "Uploading and submitting..." : "Send file for evaluation"}
+                  </Button>
+                </div>
+                {isBusy && <TipsLoader />}
+              </CardContent>
+            </Card>
+          </motion.div>
         )}
 
         {step === "result" && evaluationResult && (
