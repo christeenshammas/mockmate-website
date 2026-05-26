@@ -50,7 +50,7 @@ const prepInstructions = [
 const interviewTips = [
   {
     label: "Did you know?",
-    color: "#0284c7",
+    color: "#0ea5e9",
     bg: "#e0f2fe",
     icon: "clock",
     tips: [
@@ -61,8 +61,8 @@ const interviewTips = [
   },
   {
     label: "Quick tip",
-    color: "#0369a1",
-    bg: "#f0f9ff",
+    color: "#0ea5e9",
+    bg: "#e0f2fe",
     icon: "check",
     tips: [
       "A firm, 2–3 second handshake has been shown to measurably increase your odds of getting hired. There's literally a study on it.",
@@ -73,7 +73,7 @@ const interviewTips = [
   {
     label: "Brain fact",
     color: "#0ea5e9",
-    bg: "#bae6fd",
+    bg: "#e0f2fe",
     icon: "sparkles",
     tips: [
       "A real smile — one that reaches your eyes — triggers mirror neurons in the interviewer's brain, creating instant connection.",
@@ -83,7 +83,7 @@ const interviewTips = [
   },
   {
     label: "Psychology trick",
-    color: "#075985",
+    color: "#0ea5e9",
     bg: "#e0f2fe",
     icon: "message",
     tips: [
@@ -94,8 +94,8 @@ const interviewTips = [
   },
   {
     label: "Body language",
-    color: "#0c4a6e",
-    bg: "#f0f9ff",
+    color: "#0ea5e9",
+    bg: "#e0f2fe",
     icon: "video",
     tips: [
       "Your legs reveal what your mind is thinking — if they point at the exit, the interviewer notices. Face them squarely.",
@@ -105,8 +105,8 @@ const interviewTips = [
   },
   {
     label: "Hire secret",
-    color: "#0284c7",
-    bg: "#bae6fd",
+    color: "#0ea5e9",
+    bg: "#e0f2fe",
     icon: "mic",
     tips: [
       "Skills can be taught. Personality can't. Most recruiters today are choosing who you are over what you know.",
