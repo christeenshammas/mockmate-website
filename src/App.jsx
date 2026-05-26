@@ -132,8 +132,8 @@ function getRandomHrQuestion(previousQuestion = "") {
 
 function validateVideoFile(file) {
   if (!file) return { valid: false, message: "Please select a video file." };
-  const validMimeTypes = ["video/mp4", "video/quicktime"];
-  const validExtensions = [".mp4", ".mov"];
+  const validMimeTypes = ["video/mp4", "video/quicktime", "video/webm"];
+  const validExtensions = [".mp4", ".mov", ".webm"];
   const fileName = file.name?.toLowerCase() || "";
   const hasValidType = validMimeTypes.includes(file.type);
   const hasValidExtension = validExtensions.some((ext) => fileName.endsWith(ext));
@@ -336,19 +336,19 @@ export default function App() {
       setVideoFile(null);
       setError(null);
       setTimeout(() => { if (videoPreviewRef.current) videoPreviewRef.current.srcObject = stream; }, 100);
-    } catch {
-      setError("Camera access denied. Please allow camera permissions and try again.");
+    } catch (err) {
+      setError("Camera access denied. Please allow camera and microphone permissions and try again.");
     }
   };
 
   const startRecording = () => {
     chunksRef.current = [];
-    const recorder = new MediaRecorder(streamRef.current, { mimeType: MediaRecorder.isTypeSupported("video/mp4") ? "video/mp4" : "video/webm" });
+    const mimeType = ["video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm"].find((t) => MediaRecorder.isTypeSupported(t)) || "";
+    const recorder = new MediaRecorder(streamRef.current, mimeType ? { mimeType } : {});
     recorder.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
     recorder.onstop = () => {
-      const ext = recorder.mimeType.includes("mp4") ? "mp4" : "webm";
-      const blob = new Blob(chunksRef.current, { type: recorder.mimeType });
-      const file = new File([blob], `recorded-interview.${ext}`, { type: recorder.mimeType });
+      const blob = new Blob(chunksRef.current, { type: "video/webm" });
+      const file = new File([blob], "recorded-interview.webm", { type: "video/webm" });
       setVideoFile(file);
       closeRecorder();
     };
@@ -415,6 +415,7 @@ export default function App() {
   };
 
   const resetForMorePractice = () => {
+    closeRecorder();
     setVideoFile(null);
     setEvaluationResult(null);
     setError(null);
