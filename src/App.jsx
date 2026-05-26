@@ -50,8 +50,8 @@ const prepInstructions = [
 const interviewTips = [
   {
     label: "Did you know?",
-    color: "#7F77DD",
-    bg: "#EEEDFE",
+    color: "#0284c7",
+    bg: "#e0f2fe",
     icon: "clock",
     tips: [
       "Recruiters form their first impression in just 7 seconds — before you've answered a single question.",
@@ -61,8 +61,8 @@ const interviewTips = [
   },
   {
     label: "Quick tip",
-    color: "#0F6E56",
-    bg: "#E1F5EE",
+    color: "#0369a1",
+    bg: "#f0f9ff",
     icon: "check",
     tips: [
       "A firm, 2–3 second handshake has been shown to measurably increase your odds of getting hired. There's literally a study on it.",
@@ -72,8 +72,8 @@ const interviewTips = [
   },
   {
     label: "Brain fact",
-    color: "#993C1D",
-    bg: "#FAECE7",
+    color: "#1d4ed8",
+    bg: "#eff6ff",
     icon: "sparkles",
     tips: [
       "A real smile — one that reaches your eyes — triggers mirror neurons in the interviewer's brain, creating instant connection.",
@@ -83,8 +83,8 @@ const interviewTips = [
   },
   {
     label: "Psychology trick",
-    color: "#185FA5",
-    bg: "#E6F1FB",
+    color: "#0ea5e9",
+    bg: "#e0f2fe",
     icon: "message",
     tips: [
       "Subtly mirroring the interviewer's posture and gestures makes them feel unconsciously drawn to you.",
@@ -94,8 +94,8 @@ const interviewTips = [
   },
   {
     label: "Body language",
-    color: "#854F0B",
-    bg: "#FAEEDA",
+    color: "#075985",
+    bg: "#bae6fd",
     icon: "video",
     tips: [
       "Your legs reveal what your mind is thinking — if they point at the exit, the interviewer notices. Face them squarely.",
@@ -105,8 +105,8 @@ const interviewTips = [
   },
   {
     label: "Hire secret",
-    color: "#993556",
-    bg: "#FBEAF0",
+    color: "#1e40af",
+    bg: "#dbeafe",
     icon: "mic",
     tips: [
       "Skills can be taught. Personality can't. Most recruiters today are choosing who you are over what you know.",
