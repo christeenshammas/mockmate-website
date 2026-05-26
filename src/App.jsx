@@ -288,6 +288,14 @@ export default function App() {
   const [evaluationResult, setEvaluationResult] = useState(null);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
+  const [recordMode, setRecordMode] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const videoPreviewRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const streamRef = useRef(null);
+  const chunksRef = useRef([]);
+  const timerRef = useRef(null);
 
   const activeStep = useMemo(() => {
     if (step === "welcome") return 1;
@@ -319,6 +327,53 @@ export default function App() {
     setError(null);
     setVideoFile(file);
   };
+
+  const openRecorder = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      streamRef.current = stream;
+      setRecordMode(true);
+      setVideoFile(null);
+      setError(null);
+      setTimeout(() => { if (videoPreviewRef.current) videoPreviewRef.current.srcObject = stream; }, 100);
+    } catch {
+      setError("Camera access denied. Please allow camera permissions and try again.");
+    }
+  };
+
+  const startRecording = () => {
+    chunksRef.current = [];
+    const recorder = new MediaRecorder(streamRef.current, { mimeType: MediaRecorder.isTypeSupported("video/mp4") ? "video/mp4" : "video/webm" });
+    recorder.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
+    recorder.onstop = () => {
+      const ext = recorder.mimeType.includes("mp4") ? "mp4" : "webm";
+      const blob = new Blob(chunksRef.current, { type: recorder.mimeType });
+      const file = new File([blob], `recorded-interview.${ext}`, { type: recorder.mimeType });
+      setVideoFile(file);
+      closeRecorder();
+    };
+    mediaRecorderRef.current = recorder;
+    recorder.start();
+    setIsRecording(true);
+    setRecordingTime(0);
+    timerRef.current = setInterval(() => setRecordingTime((t) => t + 1), 1000);
+  };
+
+  const stopRecording = () => {
+    mediaRecorderRef.current?.stop();
+    clearInterval(timerRef.current);
+    setIsRecording(false);
+  };
+
+  const closeRecorder = () => {
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    clearInterval(timerRef.current);
+    setRecordMode(false);
+    setIsRecording(false);
+    setRecordingTime(0);
+  };
+
+  const formatTime = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
   const submitVideo = async () => {
     if (!videoFile || !practiceType) {
@@ -434,13 +489,37 @@ export default function App() {
                       <p className="mt-2 text-lg font-bold text-slate-950">{practiceType === "hr" ? "HR Question" : "Self Introduction"}</p>
                       {practiceType === "hr" && (<p className="mt-2 text-slate-600">Question sent with video: {selectedQuestion}</p>)}
                     </div>
-                    <div className="mb-6 rounded-3xl border-2 border-dashed border-sky-200 bg-sky-50/70 p-8 text-center">
+                    <div className="mb-6 rounded-3xl border-2 border-dashed border-sky-200 bg-sky-50/70 p-6 text-center">
                       <input ref={fileInputRef} type="file" accept="video/mp4,video/quicktime,.mp4,.mov" onChange={handleFileChange} className="hidden" />
-                      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-white text-sky-700 shadow-sm"><Icon name="upload" size={30} /></div>
-                      <h3 className="mb-2 text-xl font-bold text-slate-900">Select MP4 or MOV file</h3>
-                      <p className="mb-5 text-sm text-slate-500">Maximum recommended length: 1 minute and 30 seconds.</p>
-                      <Button type="button" onClick={() => fileInputRef.current?.click()} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-5 font-semibold text-sky-700 hover:bg-sky-50">Import file</Button>
-                      {videoFile && <p className="mt-4 text-sm font-semibold text-sky-700">Selected: {videoFile.name}</p>}
+                      {recordMode ? (
+                        <div className="flex flex-col items-center gap-4">
+                          <video ref={videoPreviewRef} autoPlay muted playsInline className="w-full max-w-md rounded-2xl bg-black" style={{ maxHeight: "260px" }} />
+                          <div className="flex items-center gap-3">
+                            {isRecording ? (
+                              <>
+                                <span className="flex h-3 w-3 rounded-full bg-red-500 animate-pulse" />
+                                <span className="text-sm font-semibold text-slate-700">{formatTime(recordingTime)}</span>
+                                <Button type="button" onClick={stopRecording} className="rounded-2xl bg-red-500 px-6 py-4 font-semibold text-white hover:bg-red-600">Stop recording</Button>
+                              </>
+                            ) : (
+                              <Button type="button" onClick={startRecording} className="rounded-2xl bg-sky-600 px-6 py-4 font-semibold text-white shadow-lg shadow-sky-200 hover:bg-sky-700">Start recording</Button>
+                            )}
+                            <Button type="button" variant="outline" onClick={closeRecorder} className="rounded-2xl border-slate-300 px-5 py-4 text-slate-600 hover:bg-slate-50">Cancel</Button>
+                          </div>
+                          <p className="text-xs text-slate-400">Max 1 min 30 sec — click stop when done</p>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-white text-sky-700 shadow-sm"><Icon name="upload" size={30} /></div>
+                          <h3 className="mb-2 text-xl font-bold text-slate-900">Select or record a video</h3>
+                          <p className="mb-5 text-sm text-slate-500">Maximum recommended length: 1 minute and 30 seconds.</p>
+                          <div className="flex flex-wrap justify-center gap-3">
+                            <Button type="button" onClick={() => fileInputRef.current?.click()} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-5 font-semibold text-sky-700 hover:bg-sky-50"><Icon name="upload" className="mr-2" size={18} />Import file</Button>
+                            <Button type="button" onClick={openRecorder} className="rounded-2xl bg-sky-600 px-6 py-5 font-semibold text-white shadow-lg shadow-sky-200 hover:bg-sky-700"><Icon name="camera" className="mr-2" size={18} />Record a video</Button>
+                          </div>
+                          {videoFile && <p className="mt-4 text-sm font-semibold text-sky-700">Selected: {videoFile.name}</p>}
+                        </>
+                      )}
                     </div>
                     {error && <p className="mb-5 rounded-2xl bg-red-50 p-4 text-sm font-medium text-red-600">{error}</p>}
                     <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
