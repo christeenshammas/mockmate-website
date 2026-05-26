@@ -247,21 +247,16 @@ function TipsLoader() {
   const t = allTips[idx];
 
   return (
-    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-3xl bg-white/96 px-8">
-      <div className="mb-8 flex items-center gap-2">
-        <Icon name="loader" className="animate-spin text-sky-500" size={16} />
-        <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Analysing your video</span>
-      </div>
-
+    <div className="mx-auto mt-5 w-3/4"
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0px)" : "translateY(10px)",
+        transition: "opacity 0.4s ease, transform 0.4s ease",
+      }}
+    >
       <div
-        style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0px)" : "translateY(12px)",
-          transition: "opacity 0.4s ease, transform 0.4s ease",
-          background: t.bg,
-          borderLeft: `4px solid ${t.color}`,
-        }}
-        className="w-full max-w-sm rounded-3xl p-7 shadow-md"
+        className="w-full rounded-3xl p-7 shadow-md"
+        style={{ borderLeft: `4px solid ${t.color}`, background: t.bg }}
       >
         <div className="mb-4 flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white/70" style={{ color: t.color }}>
@@ -270,17 +265,17 @@ function TipsLoader() {
           <span className="text-xs font-bold uppercase tracking-widest" style={{ color: t.color }}>{t.label}</span>
         </div>
         <p className="text-[15px] font-medium leading-7 text-slate-800">{t.tip}</p>
-      </div>
-
-      <div className="mt-8 flex gap-1.5">
-        {allTips.map((_, i) => (
-          <div key={i} className="h-1.5 rounded-full transition-all duration-500"
-            style={{ width: i === idx ? "20px" : "6px", background: i === idx ? t.color : "#e2e8f0" }} />
-        ))}
+        <div className="mt-5 flex gap-1.5">
+          {allTips.map((_, i) => (
+            <div key={i} className="h-1.5 rounded-full transition-all duration-500"
+              style={{ width: i === idx ? "20px" : "6px", background: i === idx ? t.color : "#CBD5E1" }} />
+          ))}
+        </div>
       </div>
     </div>
   );
 }
+
 
 export default function App() {
   const [step, setStep] = useState("welcome");
@@ -407,37 +402,48 @@ export default function App() {
         )}
 
         {step === "upload" && (
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-4xl flex-1 items-center">
-            <Card className="relative w-full overflow-hidden border-sky-100 bg-white/80 shadow-2xl shadow-sky-100 backdrop-blur">
-              {isBusy && <TipsLoader />}
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center">
+            <Card className="w-full border-sky-100 bg-white/80 shadow-2xl shadow-sky-100 backdrop-blur">
               <CardContent className="p-8">
-                <div className="mb-7 text-center">
-                  <h2 className="mb-3 text-4xl font-black text-slate-950">Upload your practice video</h2>
-                  <p className="text-slate-600">Your video will be sent to our AI system with the selected practice type and, when relevant, the random HR question.</p>
-                </div>
-                <div className="mb-6 rounded-3xl border border-sky-200 bg-white p-5">
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-700">Selected practice</p>
-                  <p className="mt-2 text-lg font-bold text-slate-950">{practiceType === "hr" ? "HR Question" : "Self Introduction"}</p>
-                  {practiceType === "hr" && (<p className="mt-2 text-slate-600">Question sent with video: {selectedQuestion}</p>)}
-                </div>
-                <div className="mb-6 rounded-3xl border-2 border-dashed border-sky-200 bg-sky-50/70 p-8 text-center">
-                  <input ref={fileInputRef} type="file" accept="video/mp4,video/quicktime,.mp4,.mov" onChange={handleFileChange} className="hidden" />
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-white text-sky-700 shadow-sm"><Icon name="upload" size={30} /></div>
-                  <h3 className="mb-2 text-xl font-bold text-slate-900">Select MP4 or MOV file</h3>
-                  <p className="mb-5 text-sm text-slate-500">Maximum recommended length: 1 minute and 30 seconds.</p>
-                  <Button type="button" disabled={isBusy} onClick={() => fileInputRef.current?.click()} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-5 font-semibold text-sky-700 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-60">Import file</Button>
-                  {videoFile && <p className="mt-4 text-sm font-semibold text-sky-700">Selected: {videoFile.name}</p>}
-                </div>
-                {error && <p className="mb-5 rounded-2xl bg-red-50 p-4 text-sm font-medium text-red-600">{error}</p>}
-                <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
-                  <Button type="button" variant="ghost" onClick={() => setStep("practice")} disabled={isBusy} className="rounded-2xl px-6 py-5 text-slate-600">Back</Button>
-                  <Button type="button" onClick={submitVideo} disabled={!videoFile || isBusy} className="rounded-2xl bg-sky-600 px-8 py-6 text-base font-bold text-white shadow-lg shadow-sky-200 hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none">
-                    {isBusy && <Icon name="loader" className="mr-2 animate-spin" size={20} />}
-                    {isBusy ? "Uploading and submitting..." : "Send file for evaluation"}
-                  </Button>
-                </div>
+                {isBusy ? (
+                  <div className="flex flex-col items-center py-6 text-center">
+                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-sky-50 text-sky-600">
+                      <Icon name="loader" className="animate-spin" size={32} />
+                    </div>
+                    <h2 className="mb-2 text-2xl font-black text-slate-950">Analysing your video</h2>
+                    <p className="text-sm text-slate-400">This may take a moment — sit tight</p>
+                    <p className="mt-8 text-sm font-semibold text-slate-500">Good to know while you wait:</p>
+                    <span className="mt-1 text-slate-400">•</span>
+                  </div>
+                ) : (
+                  <>
+                    <div className="mb-7 text-center">
+                      <h2 className="mb-3 text-4xl font-black text-slate-950">Upload your practice video</h2>
+                      <p className="text-slate-600">Your video will be sent to our AI system with the selected practice type and, when relevant, the random HR question.</p>
+                    </div>
+                    <div className="mb-6 rounded-3xl border border-sky-200 bg-white p-5">
+                      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-700">Selected practice</p>
+                      <p className="mt-2 text-lg font-bold text-slate-950">{practiceType === "hr" ? "HR Question" : "Self Introduction"}</p>
+                      {practiceType === "hr" && (<p className="mt-2 text-slate-600">Question sent with video: {selectedQuestion}</p>)}
+                    </div>
+                    <div className="mb-6 rounded-3xl border-2 border-dashed border-sky-200 bg-sky-50/70 p-8 text-center">
+                      <input ref={fileInputRef} type="file" accept="video/mp4,video/quicktime,.mp4,.mov" onChange={handleFileChange} className="hidden" />
+                      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-white text-sky-700 shadow-sm"><Icon name="upload" size={30} /></div>
+                      <h3 className="mb-2 text-xl font-bold text-slate-900">Select MP4 or MOV file</h3>
+                      <p className="mb-5 text-sm text-slate-500">Maximum recommended length: 1 minute and 30 seconds.</p>
+                      <Button type="button" onClick={() => fileInputRef.current?.click()} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-5 font-semibold text-sky-700 hover:bg-sky-50">Import file</Button>
+                      {videoFile && <p className="mt-4 text-sm font-semibold text-sky-700">Selected: {videoFile.name}</p>}
+                    </div>
+                    {error && <p className="mb-5 rounded-2xl bg-red-50 p-4 text-sm font-medium text-red-600">{error}</p>}
+                    <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+                      <Button type="button" variant="ghost" onClick={() => setStep("practice")} className="rounded-2xl px-6 py-5 text-slate-600">Back</Button>
+                      <Button type="button" onClick={submitVideo} disabled={!videoFile} className="rounded-2xl bg-sky-600 px-8 py-6 text-base font-bold text-white shadow-lg shadow-sky-200 hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none">Send file for evaluation</Button>
+                    </div>
+                  </>
+                )}
               </CardContent>
             </Card>
+            {isBusy && <TipsLoader />}
           </motion.div>
         )}
 
