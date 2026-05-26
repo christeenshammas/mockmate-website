@@ -233,62 +233,49 @@ function TipsLoader() {
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(true);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const timer = setInterval(() => {
       setVisible(false);
       setTimeout(() => {
         setIdx((prev) => (prev + 1) % allTips.length);
         setVisible(true);
-      }, 500);
+      }, 400);
     }, 4500);
     return () => clearInterval(timer);
   }, []);
 
-  const current = allTips[idx];
+  const t = allTips[idx];
 
   return (
-    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-3xl bg-white/95 backdrop-blur-sm px-8">
-      <div className="mb-6 flex items-center gap-3">
-        <Icon name="loader" className="animate-spin text-sky-500" size={18} />
-        <span className="text-sm font-medium text-slate-400 uppercase tracking-widest">Analysing your video</span>
+    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-3xl bg-white/96 px-8">
+      <div className="mb-8 flex items-center gap-2">
+        <Icon name="loader" className="animate-spin text-sky-500" size={16} />
+        <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Analysing your video</span>
       </div>
 
       <div
-        className="w-full max-w-md rounded-3xl p-6 transition-all duration-500"
         style={{
           opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0)" : "translateY(10px)",
-          background: current.bg,
-          borderLeft: `4px solid ${current.color}`,
+          transform: visible ? "translateY(0px)" : "translateY(12px)",
+          transition: "opacity 0.4s ease, transform 0.4s ease",
+          background: t.bg,
+          borderLeft: `4px solid ${t.color}`,
         }}
+        className="w-full max-w-sm rounded-3xl p-7 shadow-md"
       >
-        <div className="mb-3 flex items-center gap-2">
-          <div
-            className="flex h-9 w-9 items-center justify-center rounded-2xl"
-            style={{ background: "white", color: current.color }}
-          >
-            <Icon name={current.icon} size={18} />
+        <div className="mb-4 flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white/70" style={{ color: t.color }}>
+            <Icon name={t.icon} size={18} />
           </div>
-          <span
-            className="text-xs font-bold uppercase tracking-widest"
-            style={{ color: current.color }}
-          >
-            {current.label}
-          </span>
+          <span className="text-xs font-bold uppercase tracking-widest" style={{ color: t.color }}>{t.label}</span>
         </div>
-        <p className="text-base leading-7 text-slate-700">{current.tip}</p>
+        <p className="text-[15px] font-medium leading-7 text-slate-800">{t.tip}</p>
       </div>
 
-      <div className="mt-6 flex gap-1.5">
+      <div className="mt-8 flex gap-1.5">
         {allTips.map((_, i) => (
-          <div
-            key={i}
-            className="h-1.5 rounded-full transition-all duration-500"
-            style={{
-              width: i === idx ? "20px" : "6px",
-              background: i === idx ? current.color : "#e2e8f0",
-            }}
-          />
+          <div key={i} className="h-1.5 rounded-full transition-all duration-500"
+            style={{ width: i === idx ? "20px" : "6px", background: i === idx ? t.color : "#e2e8f0" }} />
         ))}
       </div>
     </div>
