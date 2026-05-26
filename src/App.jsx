@@ -223,7 +223,7 @@ function InstructionCard({ icon, title, text }) {
 function PracticeTypeCard({ title, description, icon, selected, onClick }) {
   return (
     <button type="button" onClick={onClick} className={`group w-full rounded-3xl border p-6 text-left transition-all hover:-translate-y-1 hover:shadow-xl ${selected ? "border-sky-500 bg-sky-50 shadow-lg shadow-sky-100" : "border-sky-100 bg-white/80 shadow-sm"}`}>
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-100 to-cyan-100 text-sky-700 transition-transform group-hover:scale-105"><Icon name={icon} size={28} /></div>
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-100 text-sky-700 transition-transform group-hover:scale-105"><Icon name={icon} size={28} /></div>
       <h3 className="mb-2 text-xl font-bold text-slate-900">{title}</h3>
       <p className="text-sm leading-6 text-slate-600">{description}</p>
     </button>
@@ -397,7 +397,7 @@ export default function App() {
               <p className="mb-8 max-w-2xl text-lg leading-8 text-slate-600">Practice personal interviews with a multi-agent AI system that reviews your video, evaluates your answer, and gives useful feedback to improve your next attempt.</p>
               <Button type="button" onClick={() => setStep("instructions")} className="rounded-2xl bg-sky-600 px-8 py-6 text-lg font-bold text-white shadow-xl shadow-sky-200 transition-all hover:-translate-y-1 hover:bg-sky-700">Let&apos;s go</Button>
             </div>
-            <Card className="border-sky-100 bg-white/70 shadow-2xl shadow-sky-100 backdrop-blur"><CardContent className="p-8"><div className="mb-6 rounded-3xl bg-gradient-to-br from-sky-500 to-cyan-400 p-6 text-white shadow-lg"><Icon name="video" className="mb-12" size={42} /><h2 className="mb-2 text-2xl font-bold">Your interview coach is ready</h2><p className="text-sky-50">Record, upload, evaluate, and improve your confidence.</p></div><div className="grid gap-3">{["Video quality check", "Interview answer review", "Answer improvement feedback", "Next-step practice suggestions"].map((item) => (<div key={item} className="flex items-center gap-3 rounded-2xl bg-sky-50 p-4 text-sm font-medium text-slate-700"><Icon name="check" className="text-sky-600" size={20} />{item}</div>))}</div></CardContent></Card>
+            <Card className="border-sky-100 bg-white/70 shadow-2xl shadow-sky-100 backdrop-blur"><CardContent className="p-8"><div className="mb-6 rounded-3xl bg-sky-600 p-6 text-white shadow-lg shadow-sky-200"><Icon name="video" className="mb-12" size={42} /><h2 className="mb-2 text-2xl font-bold">Your interview coach is ready</h2><p className="text-sky-50">Record, upload, evaluate, and improve your confidence.</p></div><div className="grid gap-3">{["Video quality check", "Interview answer review", "Answer improvement feedback", "Next-step practice suggestions"].map((item) => (<div key={item} className="flex items-center gap-3 rounded-2xl bg-sky-50 p-4 text-sm font-medium text-slate-700"><Icon name="check" className="text-sky-600" size={20} />{item}</div>))}</div></CardContent></Card>
           </motion.div>
         )}
 
@@ -476,11 +476,11 @@ export default function App() {
                     </div>
                     <div className="rounded-3xl border border-sky-100 bg-white p-6">
                       <h3 className="mb-4 text-lg font-bold text-slate-900">Improvements</h3>
-                      <div className="grid gap-3">{evaluationResult.improvements?.map((item) => (<div key={item} className="flex items-center gap-3 text-sm text-slate-600"><Icon name="sparkles" className="text-cyan-600" size={18} />{item}</div>))}</div>
+                      <div className="grid gap-3">{evaluationResult.improvements?.map((item) => (<div key={item} className="flex items-center gap-3 text-sm text-slate-600"><Icon name="sparkles" className="text-sky-600" size={18} />{item}</div>))}</div>
                     </div>
                   </div>
                   <div className="grid gap-4 md:grid-cols-2">
-                    <Button type="button" onClick={() => alert("Connect this button to your chat model.")} className="rounded-2xl bg-cyan-600 px-6 py-6 text-base font-bold text-white shadow-lg shadow-cyan-100 hover:bg-cyan-700">Continue with chat model<Icon name="message" className="ml-2" size={20} /></Button>
+                    <Button type="button" onClick={() => alert("Connect this button to your chat model.")} className="rounded-2xl bg-sky-600 px-6 py-6 text-base font-bold text-white shadow-lg shadow-sky-200 hover:bg-sky-700">Continue with chat model<Icon name="message" className="ml-2" size={20} /></Button>
                     <Button type="button" onClick={resetForMorePractice} variant="outline" className="rounded-2xl border-sky-300 bg-white px-6 py-6 text-base font-bold text-sky-700 hover:bg-sky-50">Practice more HR questions<Icon name="help" className="ml-2" size={20} /></Button>
                   </div>
                 </div>
