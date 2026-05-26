@@ -376,7 +376,7 @@ export default function App() {
         <header className="mb-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-600 text-white shadow-lg shadow-sky-200">
-  <svg viewBox="0 0 40 44" width="32" height="36" fill="currentColor" aria-hidden="true">
+  <svg viewBox="0 0 40 44" width="24" height="28" fill="currentColor" aria-hidden="true">
     <path d="M6 0h22a4 4 0 0 1 4 4v11a4 4 0 0 1-4 4H16l-4 6-2-6H6a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4z"/>
     <path d="M26 3h6a4 4 0 0 1 4 4v7a4 4 0 0 1-4 4h-1l-2 3-1-3h-2a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4z" opacity="0.55"/>
     <circle cx="17" cy="30" r="6"/>
@@ -395,7 +395,7 @@ export default function App() {
               <h1 className="mb-5 text-5xl font-black tracking-tight text-slate-950 sm:text-6xl lg:text-7xl">Welcome to MockMate</h1>
               <p className="mb-4 text-3xl font-bold text-sky-700 sm:text-4xl">Would you like to start?</p>
               <p className="mb-8 max-w-2xl text-lg leading-8 text-slate-600">Practice personal interviews with a multi-agent AI system that reviews your video, evaluates your answer, and gives useful feedback to improve your next attempt.</p>
-              <Button type="button" onClick={() => setStep("instructions")} className="rounded-2xl bg-sky-600 px-8 py-6 text-lg font-bold text-white shadow-xl shadow-sky-200 transition-all hover:-translate-y-1 hover:bg-sky-700">Let&apos;s go<Icon name="sparkles" className="ml-2" size={20} /></Button>
+              <Button type="button" onClick={() => setStep("instructions")} className="rounded-2xl bg-sky-600 px-8 py-6 text-lg font-bold text-white shadow-xl shadow-sky-200 transition-all hover:-translate-y-1 hover:bg-sky-700">Let&apos;s go</Button>
             </div>
             <Card className="border-sky-100 bg-white/70 shadow-2xl shadow-sky-100 backdrop-blur"><CardContent className="p-8"><div className="mb-6 rounded-3xl bg-gradient-to-br from-sky-500 to-cyan-400 p-6 text-white shadow-lg"><Icon name="video" className="mb-12" size={42} /><h2 className="mb-2 text-2xl font-bold">Your interview coach is ready</h2><p className="text-sky-50">Record, upload, evaluate, and improve your confidence.</p></div><div className="grid gap-3">{["Video quality check", "Interview answer review", "Answer improvement feedback", "Next-step practice suggestions"].map((item) => (<div key={item} className="flex items-center gap-3 rounded-2xl bg-sky-50 p-4 text-sm font-medium text-slate-700"><Icon name="check" className="text-sky-600" size={20} />{item}</div>))}</div></CardContent></Card>
           </motion.div>
